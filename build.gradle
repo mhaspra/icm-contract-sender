@@ -1,0 +1,44 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.micronaut.application") version "3.6.2"
+    id("nebula.lint") version "17.7.0"
+}
+
+version = "0.1"
+group = "ch.mhaspra.icm.contract.sender"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation("io.micronaut.kafka:micronaut-kafka")
+}
+
+
+application {
+    mainClass.set("ch.mhaspra.icm.contract.sender.Application")
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("ch.mhaspra.icm.contract.sender.*")
+    }
+}
+
+gradleLint{
+    rules=["unused-dependency"]
+}
+
+
+
